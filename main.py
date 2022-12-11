@@ -38,6 +38,7 @@ def get_matching_article(url, words, switch=True):
                 if (word in title.lower()) or (word in [hub.lower() for hub in hubs]) or (
                         word in article_preview.lower()):
                     print(f"{article_date.strftime('%d.%m.%Y %H:%M')} - {title} - {link}")
+                    break
         else:
             # TODO: Сбор данных из полной статьи
             response_whole_article = requests.get(link, headers=HEADER)
@@ -49,6 +50,7 @@ def get_matching_article(url, words, switch=True):
                 if (word in title.lower()) or (word in [hub.lower() for hub in hubs]) or (
                         word in whole_article.lower()):
                     print(f"{article_date.strftime('%d.%m.%Y %H:%M')} - {title} - {link}")
+                    break
 
 
 if __name__ == "__main__":
