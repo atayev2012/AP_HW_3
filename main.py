@@ -2,6 +2,7 @@ import requests
 import bs4
 from fake_useragent import UserAgent
 from datetime import datetime
+import re
 
 # определяем список ключевых слов
 KEYWORDS = ["дизайн", "фото", "web", "python"]
@@ -14,11 +15,13 @@ HEADER = {
     "User-Agent": ua.firefox
 }
 
+main_url = "https://habr.com/ru/all/"
+
 
 def get_matching_article(url, words, switch=True):
     response = requests.get(url, headers=HEADER)
     text = response.text
-    data_list = []
+    base_url = re.search(r"https://\w+\.\w+", url)[0]
     soup = bs4.BeautifulSoup(text, features="html.parser")
     articles = soup.find_all("article")
 
@@ -54,8 +57,5 @@ def get_matching_article(url, words, switch=True):
 
 
 if __name__ == "__main__":
-    base_url = "https://habr.com"
-    main_url = base_url + "/ru/all/"
-
-    #Сменив switch параметр функции на False, можно запустить поиск по всей статье (По умолчанию этот параметр True)
-    get_matching_article(main_url, KEYWORDS, False)
+    # Сменив switch параметр функции на False, можно запустить поиск по всей статье (По умолчанию этот параметр True)
+    get_matching_article(main_url, KEYWORDS)
