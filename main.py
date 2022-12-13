@@ -24,7 +24,7 @@ def get_matching_article(url, words, switch=True):
     base_url = re.search(r"https://\w+\.\w+", url)[0]
     soup = bs4.BeautifulSoup(text, features="html.parser")
     articles = soup.find_all("article")
-
+    data_list = []
     for article in articles:
         # TODO: Сбор данных из превью
         title = article.find("h2").find("span").text
@@ -40,6 +40,7 @@ def get_matching_article(url, words, switch=True):
                 word = word.lower()
                 if (word in title.lower()) or (word in [hub.lower() for hub in hubs]) or (
                         word in article_preview.lower()):
+                    data_list.append(f"{article_date.strftime('%d.%m.%Y %H:%M')} - {title} - {link}")
                     print(f"{article_date.strftime('%d.%m.%Y %H:%M')} - {title} - {link}")
                     break
         else:
@@ -52,10 +53,16 @@ def get_matching_article(url, words, switch=True):
                 word = word.lower()
                 if (word in title.lower()) or (word in [hub.lower() for hub in hubs]) or (
                         word in whole_article.lower()):
+                    data_list.append(f"{article_date.strftime('%d.%m.%Y %H:%M')} - {title} - {link}")
                     print(f"{article_date.strftime('%d.%m.%Y %H:%M')} - {title} - {link}")
                     break
+    return data_list
 
 
 if __name__ == "__main__":
     # Сменив switch параметр функции на False, можно запустить поиск по всей статье (По умолчанию этот параметр True)
-    get_matching_article(main_url, KEYWORDS)
+    data = get_matching_article(main_url, KEYWORDS)
+
+    with open("result.txt", "wt", encoding="utf-8") as f:
+        for i in data:
+            f.writelines(i+"\n")
